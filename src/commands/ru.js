@@ -1,31 +1,29 @@
-// import request from 'request';
+import axios from 'axios';
 import { load } from 'cheerio';
+import {
+  DISH_IDX_TO_KEY,
+  URL_MENU,
+  DAY_IDX_TO_KEY,
+} from '../helpers/ruHelpers.js';
 
-const URL_MENU =
-  'http://proap.ufabc.edu.br/nutricao-e-restaurantes-universitarios/cardapio-semanal';
-export const DAY_IDX_TO_KEY = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-export const DISH_IDX_TO_KEY = [
-  'lunch',
-  'diner',
-  'veggie',
-  'garrison',
-  'salad',
-  'dessert',
-];
+export async function thisWeek() {
+  const { data } = await axios.get(URL_MENU);
 
-export function thisWeek() {
+  const $ = load(data, { xmlMode: true });
+  const selection = 'div.row-fluid > div > table > tbody';
+
+  const tbody = $(selection)[0].children;
+  const tablerow = tbody.filter(tr => tr.name === 'tr');
+
+  const menu = {};
+  // make sunday always empty
+  menu['sun'] = {};
+  DISH_IDX_TO_KEY.forEach(sumMenu => (menu['sun'][sumMenu] = null));
+
   return new Promise(resolve => {
-    let menu = {};
     request(URL_MENU, (err, res, body) => {
       if (err) {
       } else {
-        const $ = load(body);
-        const test = $(
-          '.cardapio-semanal > table'
-        )[0].children[0].next.children.filter(x => x.name == 'tr');
-
-        menu['sun'] = {};
-        DISH_IDX_TO_KEY.forEach(x => (menu['sun'][x] = '-'));
         for (let i = 1; i < test.length; i += 2) {
           let dx = DAY_IDX_TO_KEY[(i + 1) / 2 - 1];
           menu[dx] = {};

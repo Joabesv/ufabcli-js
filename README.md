@@ -69,8 +69,8 @@ For more complex changes, pls, make an issue first so we can discuss the design.
 This project is FOSS Software, licensed under the GNU Affero General Public License v3.0 (AGPL) - see the [LICENSE.md](https://github.com/EduRenesto/ufabcli-js/blob/master/LICENSE) file for details. </br>
 
 ### To-do
-- [ ] - Refactor the entrypoint (src/index.js)
-- [ ] - Refactor ru file
+- [x] - Refactor the entrypoint (src/index.js)
+- [ ] - Refactor ru file - in progress
 - [ ] - publish to npm, so users can use it via npx or npm -g
 - [ ] - see the use case for Typescript
 - [ ] - implement fetch from node core to remove axios lib

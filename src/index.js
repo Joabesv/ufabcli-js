@@ -40,6 +40,7 @@ const main = async () => {
     const menu = await thisWeek();
     return menu[day][meal];
   } catch (err) {
+    // will fall here in case, thisWeek Call fail
     throw new Error(err);
   }
 };
