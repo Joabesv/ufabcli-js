@@ -1,5 +1,6 @@
 import { ArgumentTypeError } from 'argparse';
-export function daysHelpers(days) {
+import { DAY_IDX_TO_KEY, DISH_IDX_TO_KEY } from '../commands/ru.js';
+export function daysHelper(days) {
   const isDayValid = days < 0 || days > 5;
 
   if (isDayValid) {

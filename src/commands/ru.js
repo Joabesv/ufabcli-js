@@ -1,10 +1,10 @@
-import request from 'request';
+// import request from 'request';
 import { load } from 'cheerio';
 
 const URL_MENU =
   'http://proap.ufabc.edu.br/nutricao-e-restaurantes-universitarios/cardapio-semanal';
-const DAY_IDX_TO_KEY = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-const DISH_IDX_TO_KEY = [
+export const DAY_IDX_TO_KEY = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+export const DISH_IDX_TO_KEY = [
   'lunch',
   'diner',
   'veggie',

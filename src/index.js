@@ -1,53 +1,48 @@
-import { ArgumentParser, ArgumentTypeError } from 'argparse';
+import { ArgumentError, ArgumentParser } from 'argparse';
 
 import { thisWeek } from './commands/ru.js';
+import { daysHelper, mealsHelper } from './helpers/argsHelpers.js';
 
-let parser = new ArgumentParser({
-  version: '0.0.1',
-  addHelp: true,
+const parser = new ArgumentParser({
+  version: '1.0.0',
   description: 'ufabcli - o app essencial para o rato de computacao',
+  add_help: true,
 });
 
-let subparsers = parser.addSubparsers({
-  tile: 'subcomands',
+const subparsers = parser.add_subparsers({
+  title: 'subcomands',
   dest: 'subcommand_name', // wtf
 });
 
-let ruParser = subparsers.addParser('ru', { addHelp: true });
-ruParser.addArgument(['-d', '--day'], {
+const ruParser = subparsers.add_parser('ru', { addHelp: true });
+
+ruParser.add_argument('-d', '--day', {
   action: 'store',
-  type: x => {
-    if (x < 0 || x > 5) {
-      throw ArgumentTypeError(`${x} nao e um dia valido!`);
-    } else {
-      return ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'][x];
-    }
-  },
+  type: daysHelper,
   help: 'O dia da semana. 0 = segunda, 5 = sabado',
 });
-ruParser.addArgument(['-m', '--meal'], {
+
+ruParser.add_argument('-m', '--meal', {
   action: 'store',
-  type: x => {
-    if (
-      ['lunch', 'diner', 'veggie', 'garrison', 'salad', 'dessert'].indexOf(x) ==
-      -1
-    ) {
-      throw ArgumentTypeError(`${x} nao e uma refeicao valida!`);
-    } else {
-      return x;
-    }
-  },
+  type: mealsHelper,
   help: 'A refeicao. Pode ser [lunch, diner, veggie, garrison, salad, dessert]',
 });
 
 const main = async () => {
-  const args = parser.parseArgs();
+  try {
+    const { day, meal, subcommand_name } = parser.parse_args();
+    console.log({ day, meal });
 
-  switch (args.subcommand_name) {
-    case 'ru':
-      const menu = await thisWeek();
-      return menu[args.day][args.meal];
+    if (!subcommand_name === 'ru') {
+      throw ArgumentError('O argumento passado é inválido');
+    }
+
+    const menu = await thisWeek();
+    return menu[day][meal];
+  } catch (err) {
+    throw new Error(err);
   }
 };
 
-main().then(console.log);
+const output = await main();
+console.log(output);
